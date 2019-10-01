@@ -1,0 +1,717 @@
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+                                 65CM V0.2
+
+
+
+                      - A Typical SidWare production -
+
+                           QUALITY.FOR.PROGRAMMERS
+
+
+                       by HackZoid/Siders in 1999, 2002
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+RELEASELOGG
+=---------=
+
+1999-XX-XX: Version 0.68 released.
+2001-01-16: Version 0.070 ( new numbering )
+2002-08-29: version 0.2 released.
+
+CHANGELOGG
+=--------=
+
+V0.070 : Fixed buggs in IF-comparisions, and added GETASWORD@ and PUTASWORD@
+v0.2   : While command extended to make real comparisions, while maintaining
+         compatibility with the old usage and syntax.
+         Let command allows easier syntax.
+         Fixed bug in the general Expressions-handling.
+
+Background
+=--------=
+
+Let's face it. There have been no good cross compilers for the 6502! Either
+have they been "too pascal stylish" and been too protective for the
+programmer to be fast enough, or you've had to PAY MONEY for using them
+even for non-commersial projects.
+
+So see this as the Siders answer on this!
+
+
+Welcome
+=-----=
+
+Since you're reading this I assume that you are a programmer of some sort
+and first you have to determine if you are a good programmer, so good that
+you will handle 65CM itself. Why is this important? As mentioned before 65CM
+is NOT VERY PROTECTIVE. The only error-messages avaliable are the ones that
+the compiler itself will answer you with if it cannot handle the source code
+while compiling!
+
+Why is this ? ( a newbee would ask )
+
+SPEED! Every comparision or check takes time. In a loop, time multiplies.
+On a rasterline, time is essential. That's why this language will never
+answer the end user: ?SYNTAX ERROR, ?NEGATIVE SUBTRACTION IN A WORD ERROR
+etc.
+
+This language assumes that you are programmer enough to write programs
+that are stable, not to trust the operating system that it will help if
+something fu*x up.
+
+See it as a limited C Compiler without warnings.
+
+OK, NOW YOU ARE WARNED
+
+"So why on earth should I use it?" - you ask!
+
+BECAUSE:
+
+1. SPEED ( you can write scrollers, moving logos, sprite multiplexers and
+           more on a C64 completely NATIVE in this language! )
+2. DEVELOPING SPEED ( much easier and faster to write stable programs
+           with this one compared to assembler since you can write
+           structured programs. )
+
+65CM is suitable for everything from demo-programming ( partly native ),
+to the building of big cool apps.
+
+DOES IT SOUND COOL YET? Now let's learn a bit more about actual programming
+in 65CM.
+
+
+Facts about 65CM
+=--------------=
+
+
+* 65CM handles 2 types of variables, namely BYTE and WORD.
+
+* 65CM handles "inline assembler".
+
+* 25 Native keyword statements are avaliable. ( not including comments and
+  inline assembler definitions ).
+
+* It supports every 6502 based computer. (not dependent of any OS or BIOS)
+
+* Programs are compiled/assembled to ANY part(s) of the memory.
+
+* Readable source!
+
+* Written in totally Object Oriented Borland Pascal 7.0 in a object model
+  that makes it very easily expandable. ( ... with more keywords etc. )
+
+  NEW from version 0.2: Now we compile this product using Virtual Pascal
+  ( http://www.vpascal.com ). That means that you can make changes in
+  65CM yourself using ONLY free software products.
+
+* Free for use under the GPL ( General Public License )
+
+
+
+
+Language rules and structure
+=--------------------------=
+
++ Every line holds maximum one command each
+
++ There can be as many spaces you like before, after and between words in
+  a line. BUT THERE GOT TO BE AT LEAST ONE SPACE BETWEEN WORDS.
+
++ Expressions are just handled from left to right so $10+20*50 will be
+  what you normally would expect ( $10 + 20 ) * 50 to be. Pharenthesises
+  are NOT allowed, and neighter are spaces within an expression. Valid
+  characters in an expression are '0'..'9', '$' ( for hex ) and '+', '-'
+  '*' and '/'.
+
++ Expressions don't include variables and are treated as constants at
+  compile-time.
+
++ Variable names must be at least two characters long and start with a
+  letter.
+
+
+
+Keywords
+=------=
+
+ADD            AND             ASM            BYTE
+DECREMENT      ENDASM          ENDIF          FILLMEM
+GETASWORD@     GOSUB           GOTO           IF
+INCREMENT      LABEL           LET            MOVEMEM
+OR             ORGIN           PEEK           POINTER
+POKE           PUTASWORD@      SUBEND         SUBTRACT
+WEND           WHILE           WORD
+
+
+ADD:
+----
+
+  Purpose: Add two numbers and/or variables to eachother giving the result
+           to a variable.
+
+  Syntax:
+    ADD     <Variable OR Expression>
+     TO     <Variable OR Expression>
+     GIVING <Variable>
+
+
+  Examples:
+
+    a) ADD aa TO bb GIVING cc
+    b) ADD $05+38 TO bb GIVING cc
+    c) ADD aa TO bb GIVING bb
+
+
+
+
+AND:
+----
+
+  Purpose: Perform a bitwise and between two numbers and/or variables giving
+           the result to a variable.
+
+  Syntax:
+    AND     <Varibale OR Expression>
+     WITH   <Variable OR Expression>
+     GIVING <Variable>
+
+  Examples:
+
+    a) AND 3 WITH 1 GIVING aa
+    b) AND 128 WITH bb GIVING cc
+    c) AND aa WITH bb GIVING cc
+
+
+
+
+ASM:
+----
+
+  Purpose: To insert a block of code in pure assembler ( AS65 style ).
+      
+  Syntax:
+    ASM
+      .
+      . ( assembler code here )
+      .
+    ENDASM
+
+  Examples:
+
+    a) ASM
+                 sei
+                 lda #$00
+                 sta $d020
+       ENDASM
+
+
+
+
+BYTE:
+-----
+
+  Purpose: To define a byte variable.
+
+  
+  Syntax:
+    BYTE <Variablename> [ = <InitValue> ]
+
+  Examples:
+
+    a) BYTE aa
+    b) BYTE bb = $15
+
+
+
+
+DECREMENT:
+----------
+
+  Purpose: To decrement a variable. ( var = var - 1 )
+
+  Syntax:
+    DECREMENT <Variablename>
+
+  Examples:
+
+    a) DECREMENT aa
+    b) WORD aa = 0
+       DECREMENT aa // aa = $ffff
+
+
+
+
+ENDASM:
+-------
+
+  Purpose: To end an assembler code block.
+
+  for more details: See ASM
+
+
+ENDIF:
+
+  Purpose: To end an If code block.
+
+  for more details: See IF
+
+
+
+
+
+FILLMEM:
+--------
+
+  Purpose: Fill an section of the memory with a certain value.
+
+  Syntax:
+    FILLMEM <Variable OR Expression>
+    RANGE   <Variable OR Expression>
+    WITH    <Varibale OR Expression>
+
+  Examples:
+
+    a) FILLMEM aa RANGE bb WITH cc
+    b) FILLMEM $0400 RANGE 1000 WITH $20
+
+
+
+
+
+GETASWORD@:
+-----------
+
+  Purpose: To get a position in a pointed memorylocation as if it
+           was a word-variable. ( primitive type-casting )
+
+  Syntax:
+    GETASWORD@ <word-variable> GIVING <word-variable>
+
+  Examples:
+    a) GETASWORD@ my_pointer GIVING my_value
+
+
+
+
+
+GOSUB:
+------
+
+  Purpose: Call a subroutine, internal or external, giving the programmer
+           the possibility to send in and return values of the processor
+           registers with defined variables. Equivalent to JSR in assembler.
+
+  Syntax:
+    GOSUB <Variable (pointermode) OR Expression (Address) OR Label (Internal)>
+    [
+    PASSING
+    <Variable> AS ACC
+    <Variable> AS XREG
+    <Variable> AS YREG
+    ]
+
+  Examples:
+    
+    a) GOSUB hardscroll //label
+    b) WORD chrout = $ffd2
+       BYTE cls = 147
+       GOSUB chrout PASSING cls AS ACC
+
+  See also:
+
+    SUBEND
+
+
+
+
+
+GOTO:
+-----
+
+  Purpose: Jump to an address given by an expression, Variable or Label.
+
+  Syntax: 
+    GOTO <Variable (pointermode) OR Expression (Address) OR Label (Internal)>
+
+  Examples:
+
+    a) GOTO label1
+    b) GOTO $1000
+    c) GOTO aa //variable pointer.
+
+
+
+
+
+IF:
+---
+
+  Purpose: Make a comparision between two elements ( Variables or
+           Expressions ) and if its true then the code in the following
+           if block is executed.
+
+  Syntax:
+    IF <Variable OR Expression> ( '=', '<>', '<', '>', '<=', '>=' ) <Variable OR Expression> THEN
+      .
+      .
+      .
+    ENDIF
+
+  Examples:
+
+    a) IF aa > 5 THEN
+         GOSUB print
+       ENDIF
+
+    b) IF 6 >= 9 THEN //will ALWAYS skip this code!
+       ENDIF
+
+
+
+
+
+INCREMENT:
+----------
+
+  Purpose: To increment a variable. ( var = var + 1 )
+
+  Syntax:
+    INCREMENT <Variablename>
+
+  Examples:
+
+    a) INCREMENT aa
+    b) WORD aa = $ffff
+       INCREMENT aa // aa = 0
+
+
+
+
+LABEL:
+------
+
+  Purpose: To define a label within the programcode.
+
+  Syntax:
+    LABEL <Labelname>
+
+  Examples:
+
+    a) LABEL mainloop
+    b) LABEL printsub
+
+
+
+
+
+LET:
+----
+
+  Purpose: To give a variable a value at runtime.
+
+  Syntax:
+    LET <Variable> GET <Variable OR Expression>
+  or
+    LET <Variable> = <Variable OR Expression>
+
+  Examples:
+    
+    a) LET aa GET $05
+    b) LET bb GET aa
+    c) LET cc = $ffd2
+
+
+
+
+MOVEMEM:
+--------
+
+  Purpose: To copy a block of memory from one place to another.
+
+  Syntax:
+    MOVEMEM <Variable OR Expression>
+    TO <Variable OR Expression>
+    RANGE <Variable OR Expression>
+    [BACKWARDS]
+
+  Examples:
+
+    a) MOVEMEM aa TO bb RANGE cc
+    b) MOVEMEM $0400+40 TO $0400+41 RANGE 37 BACKWARDS
+
+
+
+
+
+OR:
+---
+
+  Purpose: Perform a bitwise or between two numbers and/or variables giving
+           the result to a variable.
+
+  Syntax:
+    OR      <Varibale OR Expression>
+     WITH   <Variable OR Expression>
+     GIVING <Variable>
+
+  Examples:
+
+    a) OR 3 WITH 1 GIVING aa
+    b) OR 128 WITH bb GIVING cc
+    c) OR aa WITH bb GIVING cc
+
+
+
+
+
+ORGIN:
+------
+
+  Purpose: To define a start address for the program in memory.
+
+  Syntax:
+    ORGIN <Expression>
+
+  Examples:
+
+    a) ORGIN 4096
+    b) ORGIN $3000
+
+
+
+
+PEEK:
+-----
+
+  Purpose: To read the value from a byte in memory and pass it to a variable
+           in the program. ( To do this with word see GETASWORD@ )
+
+  Syntax:
+    PEEK <Variable OR Expression> GIVING <Variable>
+
+  Examples:
+
+    a) PEEK aa GIVING bb
+    b) PEEK $d018 GIVING aa
+
+
+
+
+
+POINTER:
+--------
+
+  Purpose: To point out a label, variable or address with a wordvariable.
+
+  Syntax:
+    POINTER <WordVariable> TO <Label OR Variable OR Expression (address)>
+
+  Examples:
+
+    a) POINTER aa TO bb
+    b) POINTER bb TO $d012
+    c) POINTER cc TO looplabel
+
+
+
+
+POKE:
+-----
+
+  Purpose: To store the value of a variable into a byte in memory.
+           ( To do this with word see PUTASWORD@ )
+
+  Syntax:
+    POKE <Variable OR Expression> WITH <Variable OR Expression>
+
+  Examples:
+
+    a) POKE aa WITH bb
+    b) POKE $d019 WITH 147
+    c) POKE $d011 WITH bb
+
+
+
+
+
+PUTASWORD@:
+-----------
+ 
+  Purpose: To write a value from a word-variable into a location
+           pointed out by another word-variable. Writes two bytes!
+           (lo+hi)
+
+  Syntax:
+    PUTASWORD@ < word-varieble > VALUE < word-variable >
+
+  Examples:
+    a) PUTASWORD@ my_pointer VALUE my_value
+
+
+
+
+SUBEND:
+-------
+
+  Purpose: To mark the end of a subroutine. Equivalent to RTS in assembler.
+
+  Syntax:
+    SUBEND
+
+  Examples:
+
+    a) GOSUB a_subroutine
+       LABEL a_subroutine
+         .
+         .
+       SUBEND
+
+
+
+
+SUBTRACT:
+---------
+
+  Purpose: Subtract one number or variable from another number or variable
+           giving the result to a variable.
+
+  Syntax:
+    SUBTRACT <Variable OR Expression>
+     FROM    <Variable OR Expression>
+     GIVING  <Variable>
+
+
+  Examples:
+
+    a) SUBTRACT aa FROM bb GIVING cc
+    b) SUBTRACT $05+38 FROM bb GIVING cc
+    c) SUBTRACT aa FROM bb GIVING bb
+
+
+
+
+WEND:
+-----
+
+  Purpose: To define the end of an WHILE-loop
+
+  Syntax:
+    WHILE <Variable>
+      .
+      .
+    WEND
+
+  See also: WHILE
+
+
+
+
+
+WHILE:
+------
+
+  Purpose: To define the start of a loop that will continue to spinn until
+           the value that is examined is det to zero.
+           From v0.2 you may use any comparision with the while statement.
+
+  Syntax:
+    WHILE <Variable OR Expression>
+  or
+    WHILE <Variable OR Expression> ( '=', '<>', '<', '>', '<=', '>=' ) <Variable OR Expression>
+
+  Examples:
+
+    a) WHILE 1 //loop forever.
+    b) WHILE 0 // ommit this code!
+    c) WORD aa = $e000
+       WHILE aa
+         DECREMENT aa
+       WEND
+    d) WHILE loop_i <= $5000
+       ..
+       ..
+       WEND
+
+
+
+
+WORD:
+-----
+
+  Purpose: To define a word variable and if desired give it a initial value.
+
+  Syntax:
+    WORD <Variablename> [ = <Expression ( Initial value ) > ]
+
+  Examples:
+
+    a) WORD aa
+    b) WORD bb = $5000
+
+
+
+Start hints
+=---------=
+
+
+Those start hints are intended for users of commodore computers allthough
+there might be some cool tips for programmers of other systems here to.
+
+You might find it simple to start a new source with:
+
+---8<-------------------------------------------------
+
+ORGIN $C000 // (change to your desired startaddress)
+ 
+//some code here
+
+
+SUBEND
+
+---8<-------------------------------------------------
+
+By this little start you will have a program that will execute
+and then return to whatever started it ( for instance basic )
+
+Note that the Commodore specific startaddress as two bytes at the beggining
+of a file are NOT placed there by either the compiler or the assembler.
+Thats why I distribute a util called ADDADDR.EXE in the 65CM package.
+You have to define which address is added to the file yourself by editing
+the file COMP.BAT and set the address to the one you want the program to
+start at.
+
+
+
+PRODUCT LICENSE
+=-------------=
+
+Old license is removed from version 0.2
+
+Now this product is GNU and you may read what applies to you
+if you use this product in the file "GPL.txt", that came with
+this distribution
+
+
+MY ADDRESS
+=--------=
+
+
+Mattias Hansson
+Fasanstigen 18
+S-197 32  BRO
+Sweden
+
+CONTACTING SIDERS
+=---------------=
+
+You may reach us via e-mail;
+
+HackZoid : hackzoid@bredband.net
+Zynthaxx : zynthaxx@linux.nu
+
+
+EOF

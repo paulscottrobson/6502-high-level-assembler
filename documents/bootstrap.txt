@@ -1,0 +1,38 @@
+ADD <v>,<vx> -> <v> 		both options. size is driven by target.
+SUB							<v>,<c> done with ADD <v>,-<c>
+AND							both options all but same code.
+ORA
+EOR
+
+SET <vx> -> <v>				<v>-><v> copies double throughout, uses 2 bytes.
+SET "xxx" -> <v>			must be a word
+
+INLINE <vx>,<vx>,....
+
+WORD|BYTE <id>
+WORD|BYTE <id> = <c>
+
+INC <v> 					ADD
+DEC <v>						ADD
+SHL <v>						ADD
+SHR <v>						both, coded seperately.
+
+PROC <v>
+CALL <v>
+
+IF <v> =<>>= <vx> 			Operators are = >= < <>, types must be compatible if both <v>
+ENDIF
+
+WHILE <v> =<>>= <vx> 		As while
+ENDWHILE
+
+PEEK <vz> -> <v>
+POKE <vz>,<vx>
+
+RETURN
+
+<c> 	\\d+
+<v> 	[a-z_][a-z_0-9]*
+<vx> 	[a-z_0-9]+
+<vz> 	like <v> but must be indirectly addressable (e.g. page 0)
+
